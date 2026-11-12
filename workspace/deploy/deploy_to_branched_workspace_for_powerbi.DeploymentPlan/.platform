@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DeploymentPlan",
+    "displayName": "deploy_to_branched_workspace_for_powerbi"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "67afc2f9-d467-825d-4136-0aaa68a3a68a"
+  }
+}

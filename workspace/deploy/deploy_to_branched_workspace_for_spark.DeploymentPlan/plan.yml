@@ -1,0 +1,67 @@
+$schema: https://developer.microsoft.com/json-schemas/fabric/item/deploymentPlan/definition/plan/1.0.0/schema.json
+version: 1.0.0
+groups:
+  - name: deployment_logs_Lakehouse
+    logicalId: f25512a4-01f0-4306-8a4d-094dbeec43ab
+    postActions:
+      - name: wait_for_lakehouse_provisioning_to_comple_SynapseNotebook
+        job:
+          type: Execute
+          logicalId: 48e85018-89c0-47e3-8665-eb141a03f8f4
+  - name: environment_settings_Variables
+    logicalId: e1e163d0-738e-4618-a0b4-a6336f1e9647
+    postActions:
+      - name: set_valueset_for_variable_library_SynapseNotebook
+        job:
+          type: Execute
+          logicalId: ed33664a-c3f6-4095-a69d-23a9280388f5
+          parameters:
+            - name: target_environment
+              value: dev
+    dependsOn:
+      - groupName: deployment_logs_Lakehouse
+    options:
+      - ActiveValueSetName: dev
+  - name: sales_bronze_Lakehouse
+    logicalId: ba9ca16f-0b56-4118-a27c-2d005d409383
+    dependsOn:
+      - groupName: environment_settings_Variables
+  - name: sales_silver_Lakehouse
+    logicalId: cb42eab7-e211-4441-9d66-a979707ad989
+    postActions:
+      - name: Create 01 Silver Tables_SynapseNotebook
+        job:
+          type: Execute
+          logicalId: 84508dd5-0bad-42ed-b228-1c81b82fac8e
+    dependsOn:
+      - groupName: sales_bronze_Lakehouse
+  - name: sales_Lakehouse
+    logicalId: 0bbc7010-7972-4fd1-9f55-7d5b359c340f
+    postActions:
+      - name: Create 02 Gold Tables_SynapseNotebook
+        job:
+          type: Execute
+          logicalId: 8aac3582-75fc-49ee-a09b-75561f1bbd85
+    dependsOn:
+      - groupName: sales_silver_Lakehouse
+  - name: Product Sales DirectLake Model_dataset
+    logicalId: a0a753e6-e73a-4cb6-bb90-bb479653218f
+    postActions:
+      - name: connect_model_to_lakehouse_SynapseNotebook
+        job:
+          type: Execute
+          logicalId: b4c69ce0-02d9-474f-88d5-bcf979ddc742
+    dependsOn:
+      - groupName: sales_Lakehouse
+  - name: Product Sales Summary_report
+    logicalId: 6f7b4a9a-2f0f-484f-9ff3-dd957b697ada
+    dependsOn:
+      - groupName: Product Sales DirectLake Model_dataset
+  - name: Product Sales Time Intelligence_report
+    logicalId: 57a65049-46bd-4379-a98d-5a2f38d41fd8
+    dependsOn:
+      - groupName: Product Sales DirectLake Model_dataset
+  - name: Product Sales Top 10 Cities_report
+    logicalId: 1fd03cd0-da8a-4cb1-889c-378e3a094432
+    dependsOn:
+      - groupName: Product Sales DirectLake Model_dataset

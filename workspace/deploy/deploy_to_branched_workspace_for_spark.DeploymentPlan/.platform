@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DeploymentPlan",
+    "displayName": "deploy_to_branched_workspace_for_spark"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "27f2918f-5c23-a710-4da6-3a99cba2010e"
+  }
+}
